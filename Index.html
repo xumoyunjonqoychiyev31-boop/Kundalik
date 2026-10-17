@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>11-A · Kundalik</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0b0d12;--card:#141821;--ink:#f1f4fa;--mute:#98a1b5;--line:#262d3d;--acc:#5aaeff;--accink:#08121f;--now:#1c69d4;--nowink:#fff;--chip:#1f2532;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{background:radial-gradient(ellipse at 50% 30%,transparent 30%,rgba(0,0,0,.65) 100%),radial-gradient(#000 15%,transparent 16%) 0 0/8px 8px,radial-gradient(#000 15%,transparent 16%) 4px 4px/8px 8px,radial-gradient(rgba(255,255,255,.09) 15%,transparent 20%) 0 1px/8px 8px,radial-gradient(rgba(255,255,255,.09) 15%,transparent 20%) 4px 5px/8px 8px,#15171c;background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(112deg,transparent 0 70%,#81c4ff 70% 72%,#0653b6 72% 74%,#e7222e 74% 76%,transparent 76%);filter:drop-shadow(0 0 10px rgba(129,196,255,.45));opacity:.95}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{color:var(--ink);font:400 16px/1.45 Manrope,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+main{max-width:620px;margin:0 auto;padding:18px 16px 40px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+h1{font-size:22px;font-weight:800;margin:0}
+.date{color:var(--mute);font-size:14px}
+button{font:inherit;cursor:pointer;color:inherit}
+.icon{background:var(--chip);border:0;border-radius:12px;padding:10px 14px;font-weight:600}
+.hero{background:var(--now);color:var(--nowink);border-radius:22px;padding:22px 22px 20px;margin-bottom:18px}
+.hero small{opacity:.75;font-size:14px;font-weight:600}
+.hero .subj{font-size:28px;font-weight:800;line-height:1.15;margin:4px 0 2px}
+.hero .big{font-size:44px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.bar{height:6px;border-radius:3px;background:rgba(127,127,127,.35);margin-top:14px;overflow:hidden}
+.bar i{display:block;height:100%;background:currentColor;border-radius:3px;transition:width .6s}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scrollbar-width:none}
+.tabs button{flex:0 0 auto;border:0;background:var(--chip);border-radius:999px;padding:9px 16px;font-weight:600;color:var(--mute)}
+.tabs button.on{background:var(--ink);color:var(--bg)}
+.tabs button.today:not(.on){box-shadow:inset 0 0 0 2px var(--acc)}
+.row{display:grid;grid-template-columns:84px 1fr;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:8px;align-items:center}
+.row.cur{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
+.row.past{opacity:.5}
+.t{font-weight:800;font-variant-numeric:tabular-nums;line-height:1.25}
+.t span{display:block;color:var(--mute);font-weight:600;font-size:13px}
+.s{font-weight:700;font-size:17px}
+.s span{display:block;color:var(--mute);font-weight:400;font-size:14px}
+.empty{text-align:center;color:var(--mute);padding:36px 0}
+dialog{border:0;border-radius:22px;padding:0;max-width:520px;width:calc(100% - 24px);background:var(--card);color:var(--ink);max-height:88vh}
+dialog::backdrop{background:rgba(8,12,24,.55)}
+.dlg{padding:20px;overflow:auto;max-height:88vh}
+.dlg h2{margin:0 0 14px;font-size:20px}
+.dlg h3{margin:22px 0 8px;font-size:16px}
+.set{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+input,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px;min-width:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid .full{grid-column:1/-1}
+.pri{background:var(--ink);color:var(--bg);border:0;border-radius:12px;padding:11px 16px;font-weight:700;width:100%;margin-top:8px}
+.li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.li button{background:none;border:0;color:#c0392b;font-weight:700;padding:4px 8px}
+.toast{position:fixed;left:12px;right:12px;top:calc(12px + env(safe-area-inset-top,0px));max-width:560px;margin:0 auto;background:var(--acc);color:#17233d;border-radius:16px;padding:14px 16px;font-weight:700;box-shadow:0 8px 30px rgba(0,0,0,.25);transform:translateY(-140%);transition:transform .35s;z-index:99}
+.toast.show{transform:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div><h1>11-A kundalik</h1><div class="date" id="date"></div></div>
+  <button class="icon" id="openSet">Sozlamalar</button>
+</header>
+<section class="hero" id="hero"></section>
+<nav class="tabs" id="tabs"></nav>
+<section id="list"></section>
+</main>
+
+<dialog id="dlg"><div class="dlg">
+  <h2>Sozlamalar</h2>
+  <div class="set"><span>Dars eslatmalari</span><input type="checkbox" id="remind"></div>
+  <div class="set"><span>Necha daqiqa oldin</span>
+    <select id="lead"><option>3</option><option>5</option><option>10</option></select></div>
+  <div class="set"><span>Ertalabki jadval</span><input type="checkbox" id="morning"></div>
+  <div class="set"><span>Ertalabki vaqt</span><input type="time" id="mtime"></div>
+  <button class="pri" id="perm">Brauzer bildirishnomasiga ruxsat berish</button>
+  <p class="date" id="permNote">Eslatmalar sahifa ochiq turganda ishlaydi.</p>
+
+  <h3>Dars qo’shish</h3>
+  <div class="grid">
+    <select id="aDay" class="full"></select>
+    <input id="aSubj" class="full" placeholder="Fan">
+    <input id="aStart" type="time"><input id="aEnd" type="time">
+    <input id="aTeach" class="full" placeholder="O’qituvchi (shart emas)">
+  </div>
+  <button class="pri" id="add">Qo’shish</button>
+
+  <h3>Tanlangan kun darslari</h3>
+  <div id="manage"></div>
+  <button class="pri" id="close" style="background:var(--chip);color:var(--ink)">Yopish</button>
+</div></dialog>
+<div class="toast" id="toast"></div>
+
+<script>
+const DAYS=["Dushanba","Seshanba","Chorshanba","Payshanba","Juma","Shanba","Yakshanba"];
+const TM=[["08:00","08:45"],["08:50","09:35"],["09:40","10:25"],["10:35","11:20"],["11:25","12:10"],["12:15","13:00"]];
+const L=(d,s,n,t="")=>({day:d,subject:s,start:TM[n][0],end:TM[n][1],teacher:t});
+const DEF=[L(0,"Kelajak soat",0),L(0,"IXTA",1),L(0,"Jismoniy tarbiya",2),L(0,"Algebra",3),L(0,"Ona tili",4),L(0,"Rus tili",5),
+L(1,"Tarix",0),L(1,"Ingliz tili",1),L(1,"Algebra",2),L(1,"Jismoniy tarbiya",3),L(1,"Fizika",4),
+L(2,"Tarix",0),L(2,"Ingliz tili",1),{day:2,subject:"CHQBT (2 soat)",start:"09:40",end:"11:20",teacher:""},{day:2,subject:"Tarbiya",start:"11:25",end:"12:10",teacher:""},
+L(3,"Algebra",0),L(3,"Rus tili",1),L(3,"Ona tili",2),L(3,"IXTA",3),L(3,"Fizika",4),L(3,"Kimyo",5),
+L(4,"Biologiya",0),L(4,"Algebra",1),L(4,"Kimyo",2),L(4,"Huquq",3),L(4,"Tadbirkorlik",4),
+L(5,"Biologiya",0),L(5,"Astronomiya",1),L(5,"Algebra",2),L(5,"Adabiyot",3),L(5,"Ona tili",4)];
+let S={lessons:DEF,remind:true,lead:5,morning:true,mtime:"07:30"};
+try{const r=localStorage.getItem("kundalik11a");if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const save=()=>{try{localStorage.setItem("kundalik11a",JSON.stringify(S))}catch(e){}};
+const $=id=>document.getElementById(id);
+const wd=()=>(new Date().getDay()+6)%7;
+const mins=h=>{const[a,b]=h.split(":").map(Number);return a*60+b};
+const nowMin=()=>{const d=new Date();return d.getHours()*60+d.getMinutes()+d.getSeconds()/60};
+const dayL=d=>S.lessons.filter(l=>l.day===d).sort((a,b)=>mins(a.start)-mins(b.start));
+let sel=wd();
+
+function renderTabs(){
+  $("tabs").innerHTML=DAYS.slice(0,6).map((n,i)=>`<button class="${i===sel?"on":""} ${i===wd()?"today":""}" data-d="${i}">${n}</button>`).join("");
+  $("tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>{sel=+b.dataset.d;renderTabs();renderList()});
+}
+function renderList(){
+  const items=dayL(sel),n=nowMin(),today=sel===wd();
+  if(!items.length){$("list").innerHTML=`<div class="empty">Bu kuni dars yo’q. Dam oling.</div>`;return}
+  $("list").innerHTML=items.map(l=>{
+    const cur=today&&n>=mins(l.start)&&n<mins(l.end),past=today&&n>=mins(l.end);
+    return `<div class="row ${cur?"cur":""} ${past?"past":""}"><div class="t">${l.start}<span>${l.end}</span></div>
+    <div class="s">${l.subject}${l.teacher?`<span>${l.teacher}</span>`:""}</div></div>`}).join("");
+}
+const fmt=m=>{m=Math.ceil(m);return m>=60?`${Math.floor(m/60)} soat ${m%60} daq`:`${m} daq`};
+function renderHero(){
+  const items=dayL(wd()),n=nowMin();
+  $("date").textContent=new Date().toLocaleDateString("uz-UZ",{weekday:"long",day:"numeric",month:"long"}).replace(/^./,c=>c.toUpperCase());
+  const cur=items.find(l=>n>=mins(l.start)&&n<mins(l.end));
+  const nxt=items.find(l=>mins(l.start)>n);
+  let h;
+  if(cur){const tot=mins(cur.end)-mins(cur.start),left=mins(cur.end)-n;
+    h=`<small>Hozir davom etmoqda</small><div class="subj">${cur.subject}</div><div class="big">${fmt(left)}</div><small>tugashiga qoldi · ${cur.start}–${cur.end}</small><div class="bar"><i style="width:${100-left/tot*100}%"></i></div>`}
+  else if(nxt){h=`<small>Keyingi dars</small><div class="subj">${nxt.subject}</div><div class="big">${fmt(mins(nxt.start)-n)}</div><small>dan keyin boshlanadi · ${nxt.start}</small>`}
+  else h=`<small>${items.length?"Bugungi darslar tugadi":"Bugun dars yo’q"}</small><div class="subj">${items.length?"Yaxshi dam oling":"Dam olish kuni"}</div>`;
+  $("hero").innerHTML=h;
+}
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast.k);toast.k=setTimeout(()=>t.classList.remove("show"),7000)}
+function notify(title,body){
+  toast(title+" "+body);
+  try{if("Notification" in window&&Notification.permission==="granted")new Notification(title,{body})}catch(e){}
+  try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}
+}
+const fired=new Set();
+function check(){
+  const d=new Date(),key=d.toDateString()+d.getHours()+":"+d.getMinutes(),hm=m=>String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
+  const cur=d.getHours()*60+d.getMinutes();
+  if(S.morning&&hm(cur)===S.mtime&&!fired.has("m"+key)){fired.add("m"+key);
+    const it=dayL(wd());notify("Bugungi jadval",it.length?it.map(l=>l.start+" "+l.subject).join(", "):"Bugun dars yo’q")}
+  if(!S.remind)return;
+  dayL(wd()).forEach(l=>{
+    [["start","boshlanadi"],["end","tugaydi"]].forEach(([k,w])=>{
+      const id=key+l.subject+k;
+      if(mins(l[k])-S.lead===cur&&!fired.has(id)){fired.add(id);notify(`${S.lead} daqiqadan keyin dars ${w}`,`${l.subject} · ${l.start}–${l.end}`)}})});
+}
+function manage(){
+  $("manage").innerHTML=dayL(sel).map(l=>`<div class="li"><span>${l.start}–${l.end} · ${l.subject}${l.teacher?" · "+l.teacher:""}</span><button data-id="${S.lessons.indexOf(l)}">O’chirish</button></div>`).join("")||`<div class="date">Bu kunda dars yo’q.</div>`;
+  $("manage").querySelectorAll("button").forEach(b=>b.onclick=()=>{S.lessons.splice(+b.dataset.id,1);save();manage();renderList()});
+}
+$("openSet").onclick=()=>{
+  $("remind").checked=S.remind;$("lead").value=S.lead;$("morning").checked=S.morning;$("mtime").value=S.mtime;
+  $("aDay").innerHTML=DAYS.map((n,i)=>`<option value="${i}" ${i===sel?"selected":""}>${n}</option>`).join("");
+  $("permNote").textContent="Eslatmalar sahifa ochiq turganda ishlaydi."+("Notification" in window&&Notification.permission==="granted"?" Bildirishnoma yoqilgan.":"");
+  manage();$("dlg").showModal()};
+$("close").onclick=()=>$("dlg").close();
+["remind","morning"].forEach(i=>$(i).onchange=e=>{S[i]=e.target.checked;save()});
+$("lead").onchange=e=>{S.lead=+e.target.value;save()};
+$("mtime").onchange=e=>{if(e.target.value){S.mtime=e.target.value;save()}};
+$("perm").onclick=()=>{try{Notification.requestPermission().then(()=>$("openSet").click())}catch(e){toast("Bu brauzer bildirishnomani qo’llamaydi")}};
+$("add").onclick=()=>{
+  const s=$("aSubj").value.trim(),a=$("aStart").value,b=$("aEnd").value;
+  if(!s||!a||!b)return toast("Fan va vaqtni kiriting");
+  S.lessons.push({day:+$("aDay").value,subject:s,start:a,end:b,teacher:$("aTeach").value.trim()});
+  sel=+$("aDay").value;save();["aSubj","aStart","aEnd","aTeach"].forEach(i=>$(i).value="");
+  renderTabs();renderList();manage()};
+renderTabs();renderList();renderHero();
+setInterval(()=>{renderHero();check()},1000);
+setInterval(renderList,30000);
+</script>
+</body>
+</html>
