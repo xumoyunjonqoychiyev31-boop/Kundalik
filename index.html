@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>11-A · Kundalik</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b0d12">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{color-scheme:dark;--bg:#0b0d12;--card:#141821;--ink:#f1f4fa;--mute:#98a1b5;--line:#262d3d;--acc:#5aaeff;--accink:#08121f;--now:#1c69d4;--nowink:#fff;--chip:#1f2532;
@@ -139,7 +145,9 @@ function renderHero(){
 function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast.k);toast.k=setTimeout(()=>t.classList.remove("show"),7000)}
 function notify(title,body){
   toast(title+" "+body);
-  try{if("Notification" in window&&Notification.permission==="granted")new Notification(title,{body})}catch(e){}
+  try{if("Notification" in window&&Notification.permission==="granted"){
+    if(navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification(title,{body,icon:"icon-192.png",vibrate:[200,100,200]})).catch(()=>{try{new Notification(title,{body})}catch(e){}});
+    else new Notification(title,{body})}}catch(e){}
   try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}
 }
 const fired=new Set();
@@ -174,6 +182,7 @@ $("add").onclick=()=>{
   S.lessons.push({day:+$("aDay").value,subject:s,start:a,end:b,teacher:$("aTeach").value.trim()});
   sel=+$("aDay").value;save();["aSubj","aStart","aEnd","aTeach"].forEach(i=>$(i).value="");
   renderTabs();renderList();manage()};
+try{if("serviceWorker" in navigator&&location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}catch(e){}
 renderTabs();renderList();renderHero();
 setInterval(()=>{renderHero();check()},1000);
 setInterval(renderList,30000);
